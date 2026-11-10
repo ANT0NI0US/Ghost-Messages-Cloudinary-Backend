@@ -1,0 +1,215 @@
+{
+  "validation": {
+    "email": {
+      "invalid": "Invalid email, it must contain 5 to 25 letters, optionally followed by up to 5 digits, and use gmail, yahoo or icloud with .com or .net (e.g. example12@gmail.com)",
+      "required": "Email is required"
+    },
+    "password": {
+      "required": "Password is required",
+      "weak": "Password must contain at least one lowercase letter, one uppercase letter, one number and one special character",
+      "min": "Password must be at least 8 characters",
+      "max": "Password must be at most 16 characters",
+      "mismatch": "Password does not match confirm password"
+    },
+    "username": {
+      "min": "Username must be at least 2 characters",
+      "twoParts": "Username must include 2 parts (first name and last name)"
+    },
+    "firstName": {
+      "required": "First name is required",
+      "min": "First name must be at least 2 characters",
+      "max": "First name must be at most 30 characters"
+    },
+    "lastName": {
+      "required": "Last name is required",
+      "min": "Last name must be at least 2 characters",
+      "max": "Last name must be at most 30 characters"
+    },
+    "phone": {
+      "invalid": "Invalid phone number, use international format like +201234567890"
+    },
+    "DOB": {
+      "invalid": "Invalid date of birth"
+    },
+    "gender": {
+      "invalid": "Invalid gender value"
+    },
+    "role": {
+      "invalid": "Invalid role value"
+    },
+    "userId": {
+      "invalid": "Invalid user id"
+    },
+    "otp": {
+      "invalid": "Invalid OTP code"
+    },
+    "resetToken": {
+      "invalid": "Invalid reset password token"
+    },
+    "provider": {
+      "invalid": "Invalid provider value"
+    },
+    "content": {
+      "min": "Message content must be at least 2 characters",
+      "max": "Message content must be at most 50000 characters",
+      "required": "Message must include content or at least one attachment"
+    },
+    "receiverId": {
+      "required": "Receiver is required"
+    },
+    "targetUserId": {
+      "required": "Target user is required"
+    },
+    "senderId": {
+      "required": "Sender is required"
+    },
+    "requesterId": {
+      "required": "Requester is required"
+    },
+    "messageId": {
+      "required": "Message id is required"
+    },
+    "requestStatus": {
+      "invalid": "Invalid request status"
+    },
+    "messageType": {
+      "invalid": "Invalid message type"
+    },
+    "accountStatusType": {
+      "invalid": "Invalid account status type"
+    },
+    "page": {
+      "min": "Page must be at least 1"
+    },
+    "limit": {
+      "min": "Limit must be at least 1"
+    },
+    "file": {
+      "invalid": "Invalid attached file"
+    },
+    "status": {
+      "invalid": "Invalid account status value"
+    },
+    "idToken": {
+      "invalid": "Invalid Google token"
+    },
+    "general": {
+      "error": "Validation error",
+      "required": "This field is required",
+      "invalidType": "Invalid data type",
+      "unrecognizedKeys": "Unrecognized fields are not allowed",
+      "invalid": "Invalid value"
+    }
+  },
+  "error": {
+    "server": "Something went wrong, server error",
+    "routeNotFound": "Url: {url} with method: {method} not found",
+    "tooManyRequests": "Too many requests, please try again later",
+    "invalidId": "Invalid id format",
+    "invalidJson": "Invalid JSON body",
+    "duplicate": {
+      "email": "This email already exists",
+      "phone": "This phone number already exists",
+      "default": "This value already exists"
+    },
+    "unauthorized": "Unauthorized account",
+    "forbidden": "You do not have permission to access this resource",
+    "tokenExpired": "Your session has expired, please login again",
+    "tokenRevoked": "This session has been logged out, please login again",
+    "invalidToken": "Invalid token",
+    "missingTokenPayload": "Missing token payload",
+    "invalidUser": "Invalid user",
+    "emailNotVerified": "Email is not verified",
+    "invalidProvider": "This email is registered with a different sign-in method",
+    "emailExists": "Email already exists",
+    "invalidCredentials": "Invalid email or password",
+    "rotateTooEarly": "Cannot create new login credentials while the current access token is still valid",
+    "otpStillValid": "A valid verification code already exists, please try again later",
+    "otpLimitReached": "You have reached the verification code request limit",
+    "loginLimitReached": "You have reached the maximum number of login attempts",
+    "invalidAccount": "Invalid account",
+    "invalidOtp": "Invalid verification code",
+    "invalidRecipient": "Invalid email recipient",
+    "invalidEmailContent": "Invalid email content",
+    "fileRequired": "File is required",
+    "invalidFileFormat": "Invalid file format",
+    "invalidReceiver": "Invalid receiver id",
+    "invalidMessageId": "Invalid message id",
+    "messageNotFound": "No message found",
+    "invalidAuthKey": "Invalid authentication key",
+    "basicAuthNotAllowed": "Basic authentication is not allowed for this endpoint, please use your access token",
+    "requestNotFound": "Request not found",
+    "anonymousMessageNoSender": "This message was sent anonymously and has no identifiable sender",
+    "conversationNotFound": "Conversation not found",
+    "requestAlreadySent": "You have already sent a request for this message",
+    "requestAlreadyHandled": "An action has already been taken on this request",
+    "googleAccountCannotHoldPassword": "Google account cannot hold password",
+    "accountArchived": "This account has been archived",
+    "cannotChangeOwnStatus": "You can't change the status of your own account",
+    "statusAlreadySet": "The account already has this status",
+    "cannotDeleteOwnAccount": "You can't delete your own account",
+    "archiveBeforeDelete": "The account must be archived before it can be deleted",
+    "otpAttemptsExceeded": "Too many wrong attempts, please request a new verification code",
+    "fileTooLarge": "File is too large",
+    "tooManyFiles": "Too many files",
+    "unexpectedFileField": "Unexpected file field name",
+    "invalidUpload": "Invalid file upload",
+    "twoStepVerificationAlreadyEnabled": "Two step verification is already enabled for this account",
+    "twoStepVerificationNotEnabled": "Two step verification is not enabled for this account",
+    "resetLinkStillValid": "A reset password link has already been sent, please check your email or try again later",
+    "invalidResetLink": "The reset password link is invalid or has expired"
+  },
+  "success": {
+    "done": "Done",
+    "welcome": "Welcome to our application 💖",
+    "signup": "Account created successfully, a verification code has been sent to your email",
+    "emailConfirmed": "Email confirmed successfully",
+    "login": "User logged in successfully",
+    "gmailLogin": "User logged in with Gmail successfully",
+    "gmailSignup": "User signed up with Gmail successfully",
+    "tokensRotated": "New tokens generated successfully",
+    "logout": "Logged out successfully",
+    "otpSent": "Verification code sent successfully",
+    "twoStepVerificationEnabled": "Two-step verification has been enabled successfully",
+    "otpVerified": "Verification code confirmed successfully",
+    "passwordReset": "Password reset successfully",
+    "userRetrieved": "User retrieved successfully",
+    "usersRetrieved": "Users retrieved successfully",
+    "userUpdated": "User updated successfully",
+    "messageCreated": "Message sent successfully",
+    "messagesRetrieved": "Messages retrieved successfully",
+    "messageRetrieved": "Message retrieved successfully",
+    "messageDeleted": "Message deleted successfully",
+    "requestsRetrieved": "Requests retrieved successfully",
+    "requestActionTaken": "Request updated successfully",
+    "requestCreated": "Identity request sent successfully",
+    "conversationMessagesRetrieved": "Conversation messages retrieved successfully",
+    "conversationMessageSent": "Message sent successfully",
+    "userStatusUpdated": "User status updated successfully",
+    "userDeleted": "User deleted successfully",
+    "profileImageUpdated": "Profile image updated successfully",
+    "coverImagesUpdated": "Cover images updated successfully",
+    "profileImageDeleted": "Profile image deleted successfully",
+    "resetLinkSent": "A reset password link has been sent to your email"
+  },
+  "emailTemplate": {
+    "confirmEmailTitle": "Email Confirmation",
+    "twoStepVerificationTitle": "Two-Step Verification",
+    "forgotPasswordTitle": "Forgot Password",
+    "yourOtp": "Your OTP",
+    "expiresIn": "This code will expire in {minutes} minutes.",
+    "disclaimer": "If you didn't request this action, you can safely ignore this email.",
+    "stayInTouch": "Stay in touch",
+    "resetPasswordLinkTitle": "Reset Your Password",
+    "resetPasswordLinkBody": "We received a request to reset your password. Click the button below to choose a new one.",
+    "resetPasswordButton": "Reset Password",
+    "linkExpiresIn": "This link will expire in {minutes} minutes.",
+    "linkFallback": "If the button doesn't work, copy and paste this link into your browser:",
+    "newUserTitle": "New User Registered",
+    "newUserBody": "A new user has just joined the app.",
+    "username": "Name",
+    "email": "Email",
+    "provider": "Sign-up method",
+    "joinedAt": "Joined at"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "name": "GhostMessagesCloudinary",
+  "version": "1.0.0",
+  "description": "Backend REST API for Ghost Messages, an anonymous messaging app, built with Express and Mongoose. Features JWT access/refresh authentication with role-based access, email OTP verification, two-step login verification, Google sign-in, Redis-backed rate limiting, file uploads, and bilingual (Arabic/English) responses.",
+  "main": "./src/main.js",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "start:dev": "cross-env NODE_ENV=development node --watch-path=./src ./src/main.js",
+    "start:prod": "cross-env NODE_ENV=production pm2 start src/main.js -i 0"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongoose",
+    "mongodb",
+    "rest-api",
+    "jwt",
+    "authentication",
+    "authorization",
+    "two-factor-authentication",
+    "otp",
+    "redis",
+    "google-oauth",
+    "multer",
+    "file-upload",
+    "zod",
+    "validation",
+    "i18n",
+    "bilingual",
+    "anonymous-messaging",
+    "messaging-app",
+    "ghost-messages"
+  ],
+  "author": "Antonious Nasr",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "argon2": "^0.45.1",
+    "axios": "^1.20.0",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.11.0",
+    "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
+    "file-type": "^22.1.1",
+    "geoip-lite": "^2.0.3",
+    "google-auth-library": "^11.1.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.5",
+    "morgan": "^1.12.1",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.0.13",
+    "redis": "^6.2.1",
+    "zod": "^4.6.5"
+  }
+}
