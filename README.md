@@ -6,9 +6,10 @@ Built with **Node.js, Express 5, MongoDB (Mongoose), Redis and Cloudinary**. Eve
 
 | | |
 |---|---|
-| Live app | _link coming soon_ |
-| Web client (React) | _link coming soon_ |
-| Demo video | _link coming soon_ |
+| Live app | [ghost-messages-cloudinary-frontend.vercel.app](https://ghost-messages-cloudinary-frontend.vercel.app/) |
+| API base URL | [ghost-messages-cloudinary.vercel.app](https://ghost-messages-cloudinary.vercel.app/) |
+| Web client (React) | [ANT0NI0US/Ghost-Messages-Cloudinary-Frontend](https://github.com/ANT0NI0US/Ghost-Messages-Cloudinary-Frontend) |
+| Demo video | _on LinkedIn, link coming soon_ |
 
 ## Features
 
@@ -153,6 +154,8 @@ cp config/.env.example config/.env.development   # then fill in the values
 npm run start:dev
 ```
 
+`app.listen` in `src/DB/connection.db.js` is commented out for the Vercel deployment: uncomment it to run the API locally on `PORT`.
+
 `config/.env.example` lists every variable:
 
 | Group | Variables |
@@ -172,7 +175,13 @@ Never commit the real `.env` files: `.gitignore` already excludes them.
 
 ## Deployment
 
-The app is exported from `src/main.js` and deployed on **Vercel** as a serverless function (`vercel.json` routes every path to it), with MongoDB Atlas and a hosted Redis. Set the same variables in the Vercel project settings.
+The app is exported from `src/main.js` and deployed on **Vercel** as a serverless function (`vercel.json` routes every path to it), with MongoDB Atlas and a hosted Redis. Set the same variables in the Vercel project settings:
+
+- `WEBSITE_URL`: the deployed API URL with no port and no trailing `/` (in development it is `http://localhost:` and the app adds the port).
+- `FRONTEND_URL`: the deployed web client, so password-reset links open there.
+- `WEB_CLIENT_IDS`: the Google client ID the web client uses.
+
+File uploads go to Cloudinary: Vercel's file system doesn't keep files between requests.
 
 For a regular server, uncomment `app.listen` in `src/DB/connection.db.js` and use `npm run start:prod` (PM2 in cluster mode).
 

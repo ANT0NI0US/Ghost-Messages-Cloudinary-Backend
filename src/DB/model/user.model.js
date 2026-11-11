@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
-import { enums, events, exceptions, security } from "../../common/index.js";
+import {
+  enums,
+  events,
+  exceptions,
+  security,
+  sendEmail,
+} from "../../common/index.js";
 import configService from "../../../config/config.service.js";
 
 const userSchema = new mongoose.Schema(
@@ -144,22 +150,43 @@ userSchema.pre("save", async function () {
 });
 
 // after the first save only (signup / gmail signup) → notify the app email that a new user joined
-userSchema.post("save", function () {
+// async → mongoose waits for it, so save() (and the request) finishes after the email is sent
+userSchema.post("save", async function () {
   if (!this.wasNew) return;
 
-  events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
-    recipient: { to: configService.APP_EMAIL },
+  // the event sends AFTER the response → on Vercel the function stops before the email goes out.
+  // kept here for any future use; for now we await the email so it is sent before we respond
+  // (sendEmail catches and logs its own errors, so a failed email never fails the request)
+  // events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
+    // recipient: { to: configService.APP_EMAIL },
+    // subject: enums.EmailSubjectEnum.NEW_USER_REGISTERED,
+    // data: {
+      // lang: enums.LanguageEnum.EN,
+      // // only the fields we need, never send the document itself (it holds the hashed password)
+      // user: {
+        // username: this.username,
+        // email: this.email,
+        // provider: this.provider,
+        // createdAt: this.createdAt,
+      // },
+    // },
+  // });
+  await sendEmail.sendEmail({
+    to: configService.APP_EMAIL,
     subject: enums.EmailSubjectEnum.NEW_USER_REGISTERED,
-    data: {
-      lang: enums.LanguageEnum.EN,
-      // only the fields we need, never send the document itself (it holds the hashed password)
-      user: {
-        username: this.username,
-        email: this.email,
-        provider: this.provider,
-        createdAt: this.createdAt,
+    html: sendEmail.emailTemplate({
+      subject: enums.EmailSubjectEnum.NEW_USER_REGISTERED,
+      data: {
+        lang: enums.LanguageEnum.EN,
+        // only the fields we need, never send the document itself (it holds the hashed password)
+        user: {
+          username: this.username,
+          email: this.email,
+          provider: this.provider,
+          createdAt: this.createdAt,
+        },
       },
-    },
+    }),
   });
 });
 

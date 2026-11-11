@@ -10,6 +10,7 @@ import {
 } from "../../../common/index.js";
 import { transporter } from "./email.config.js";
 import { createOtp } from "./otp.js";
+import { emailTemplate } from "./templates/index.js";
 
 export const UserEmailKey = ({ email, subject }) => {
   return `User::${email}::${subject}_OTP`;
@@ -170,10 +171,21 @@ export const sendEmailOtp = async ({
     });
   }
 
-  events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
-    recipient: { to: email },
+  // the event sends AFTER the response → on Vercel the function stops before the email goes out.
+  // kept here for any future use; for now we await the email so it is sent before we respond
+  // (sendEmail catches and logs its own errors, so a failed email never fails the request)
+  // events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
+    // recipient: { to: email },
+    // subject,
+    // data: { code: otp, lang, expiresIn: Math.ceil(otpExpiresTime / 60) },
+  // });
+  await sendEmail({
+    to: email,
     subject,
-    data: { code: otp, lang, expiresIn: Math.ceil(otpExpiresTime / 60) },
+    html: emailTemplate({
+      subject,
+      data: { code: otp, lang, expiresIn: Math.ceil(otpExpiresTime / 60) },
+    }),
   });
 };
 
@@ -205,13 +217,28 @@ export const sendResetPasswordLink = async ({
     services.set({ key: userLinkKey, value: 1, ttl: linkExpiresTime }),
   ]);
 
-  events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
-    recipient: { to: email },
+  // the event sends AFTER the response → on Vercel the function stops before the email goes out.
+  // kept here for any future use; for now we await the email so it is sent before we respond
+  // (sendEmail catches and logs its own errors, so a failed email never fails the request)
+  // events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
+    // recipient: { to: email },
+    // subject: enums.EmailSubjectEnum.RESET_PASSWORD_LINK,
+    // data: {
+      // lang,
+      // link: `${configService.FRONTEND_URL}/reset-password/${token}`,
+      // expiresIn: Math.ceil(linkExpiresTime / 60),
+    // },
+  // });
+  await sendEmail({
+    to: email,
     subject: enums.EmailSubjectEnum.RESET_PASSWORD_LINK,
-    data: {
-      lang,
-      link: `${configService.FRONTEND_URL}/reset-password/${token}`,
-      expiresIn: Math.ceil(linkExpiresTime / 60),
-    },
+    html: emailTemplate({
+      subject: enums.EmailSubjectEnum.RESET_PASSWORD_LINK,
+      data: {
+        lang,
+        link: `${configService.FRONTEND_URL}/reset-password/${token}`,
+        expiresIn: Math.ceil(linkExpiresTime / 60),
+      },
+    }),
   });
 };

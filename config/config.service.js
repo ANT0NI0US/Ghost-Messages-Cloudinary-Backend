@@ -8,7 +8,12 @@ config({ path: resolve(`./config/.env.${NODE_ENV}`) });
 // GENERAL
 export const PORT = parseInt(process.env.PORT ?? "4000");
 export const APPLICATION_NAME = process.env.APPLICATION_NAME;
-export const WEBSITE_URL = `${process.env.WEBSITE_URL}${PORT}/`;
+// development: WEBSITE_URL=http://localhost:  -> the port is added  -> http://localhost:4000/
+// production:  WEBSITE_URL=https://your-app.vercel.app  -> no port  -> https://your-app.vercel.app/
+export const WEBSITE_URL =
+  NODE_ENV === "production"
+    ? `${process.env.WEBSITE_URL}/`
+    : `${process.env.WEBSITE_URL}${PORT}/`;
 
 // DATABASE
 const DB_URL = process.env.DB_URL_ATLAS;
