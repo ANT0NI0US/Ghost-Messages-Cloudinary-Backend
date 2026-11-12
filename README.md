@@ -9,7 +9,7 @@ Built with **Node.js, Express 5, MongoDB (Mongoose), Redis and Cloudinary**. Eve
 | Live app | [ghost-messages-cloudinary-frontend.vercel.app](https://ghost-messages-cloudinary-frontend.vercel.app/) |
 | API base URL | [ghost-messages-cloudinary.vercel.app](https://ghost-messages-cloudinary.vercel.app/) |
 | Web client (React) | [ANT0NI0US/Ghost-Messages-Cloudinary-Frontend](https://github.com/ANT0NI0US/Ghost-Messages-Cloudinary-Frontend) |
-| Demo video | _on LinkedIn, link coming soon_ |
+| Demo video | [Watch on LinkedIn](https://lnkd.in/p/eFTp7mVX) |
 
 ## Features
 
