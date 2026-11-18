@@ -13,7 +13,7 @@ emailEvent.on(
         html: sendEmail.emailTemplate({ subject, data }),
       });
     } catch (error) {
-      console.log(`Failed to send email`, error);
+      console.error(`Failed to send email`, error);
     }
   },
 );

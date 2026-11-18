@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import configService from "../../../../config/config.service.js";
 import {
   enums,
-  events,
+  // events,
   exceptions,
   security,
   services,
@@ -67,9 +67,9 @@ export async function sendEmail({
       attachments,
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.info("Message sent: %s", info.messageId);
     // Preview URL is only available when using an Ethereal test account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    console.info("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   } catch (err) {
     console.error("Error while sending mail:", err);
   }
@@ -175,9 +175,9 @@ export const sendEmailOtp = async ({
   // kept here for any future use; for now we await the email so it is sent before we respond
   // (sendEmail catches and logs its own errors, so a failed email never fails the request)
   // events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
-    // recipient: { to: email },
-    // subject,
-    // data: { code: otp, lang, expiresIn: Math.ceil(otpExpiresTime / 60) },
+  // recipient: { to: email },
+  // subject,
+  // data: { code: otp, lang, expiresIn: Math.ceil(otpExpiresTime / 60) },
   // });
   await sendEmail({
     to: email,
@@ -221,13 +221,13 @@ export const sendResetPasswordLink = async ({
   // kept here for any future use; for now we await the email so it is sent before we respond
   // (sendEmail catches and logs its own errors, so a failed email never fails the request)
   // events.emailEvent.emit(enums.EventsEnum.SEND_EMAIL, {
-    // recipient: { to: email },
-    // subject: enums.EmailSubjectEnum.RESET_PASSWORD_LINK,
-    // data: {
-      // lang,
-      // link: `${configService.FRONTEND_URL}/reset-password/${token}`,
-      // expiresIn: Math.ceil(linkExpiresTime / 60),
-    // },
+  // recipient: { to: email },
+  // subject: enums.EmailSubjectEnum.RESET_PASSWORD_LINK,
+  // data: {
+  // lang,
+  // link: `${configService.FRONTEND_URL}/reset-password/${token}`,
+  // expiresIn: Math.ceil(linkExpiresTime / 60),
+  // },
   // });
   await sendEmail({
     to: email,

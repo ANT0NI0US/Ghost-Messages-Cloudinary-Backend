@@ -5,3 +5,5 @@ export * from "./authorization.middleware.js";
 export * from "./language.middleware.js";
 export * from "./multer.middleware.js";
 export * from "./conversationAccess.middleware.js";
+export * from "./notFound.middleware.js";
+export * from "./welcome.middleware.js";

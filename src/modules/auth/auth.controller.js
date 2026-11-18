@@ -61,15 +61,20 @@ router.patch(
   },
 );
 
+const resendConfirmEmailLimiterMiddleware = limiter.generateRateLimiter({
+  limit: 5,
+});
+
 router.patch(
   "/resend-confirm-email",
+  resendConfirmEmailLimiterMiddleware,
   middleware.validation(validators.reSendConfirmEmail),
   async (req, res) => {
     await as.reSendConfirmEmail(req.validate.body, req.lang);
 
     return sResponse.SuccessResponseHandling({
       res,
-      message: "success.otpSent",
+      message: "success.otpSentIfRegistered",
     });
   },
 );
@@ -147,15 +152,20 @@ router.patch(
 );
 
 // FORGOT PASSWORD
+const forgotPasswordLimiterMiddleware = limiter.generateRateLimiter({
+  limit: 5,
+});
+
 router.post(
   "/request-forgot-password-code",
+  forgotPasswordLimiterMiddleware,
   middleware.validation(validators.requestForgetPasswordCode),
   async (req, res) => {
     await as.requestForgetPasswordCode(req.validate.body, req.lang);
 
     return sResponse.SuccessResponseHandling({
       res,
-      message: "success.otpSent",
+      message: "success.otpSentIfRegistered",
     });
   },
 );

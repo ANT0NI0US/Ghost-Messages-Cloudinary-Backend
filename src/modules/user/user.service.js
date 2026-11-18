@@ -88,88 +88,6 @@ export const shareProfile = async ({ userId }) => {
   return user.toJSON();
 };
 
-// UPLOAD IN THE ASSETS HERE IN THE PROJECT
-// export const profileImage = async (user, file) => {
-//   // keep the old image before overwriting it
-//   const oldImage = user.image;
-
-//   user.image = file.path;
-//   // we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
-//   await user.save({ validateModifiedOnly: true });
-//   await services.del({ key: security.userBaseProfile({ userId: user._id }) });
-
-//   // remove the old image only after the new one is saved
-//   if (oldImage) {
-//     await fileUpload.deleteLocalFile({ url: oldImage });
-//   }
-
-//   return user.image;
-// };
-
-// export const deleteUser = async (admin, { userId }) => {
-//   if (admin._id.equals(userId)) {
-//     throw exceptions.BadRequestException({
-//       message: "error.cannotDeleteOwnAccount",
-//     });
-//   }
-
-//   const targetUser = await queries.findOne({
-//     model: models.UserModel,
-//     filter: { _id: objectId.toObjectId({ id: userId }), paranoid: false },
-//     select: "role status email image coverImages",
-//   });
-
-//   if (!targetUser) {
-//     throw exceptions.NotFoundException({ message: "error.invalidUser" });
-//   }
-
-//   if (targetUser.role == enums.RoleEnum.ADMIN) {
-//     throw exceptions.ForbiddenException({ message: "error.forbidden" });
-//   }
-
-//   if (targetUser.status != enums.AccountStatusEnum.ARCHIVE) {
-//     throw exceptions.ConflictException({
-//       message: "error.archiveBeforeDelete",
-//     });
-//   }
-
-//   const deletedUser = await queries.findByIdAndDelete({
-//     model: models.UserModel,
-//     id: targetUser._id,
-//   });
-
-//   if (!deletedUser) {
-//     throw exceptions.ConflictException({
-//       message: "error.archiveBeforeDelete",
-//     });
-//   }
-
-//   const [userIdKeys, userEmailKeys] = await Promise.all([
-//     services.keys({
-//       prefix: `User::${targetUser._id.toString()}::`,
-//     }),
-//     services.keys({ prefix: `User::${targetUser.email}::` }),
-//   ]);
-
-//   await services.del({
-//     key: [
-//       ...new Set([
-//         ...userIdKeys,
-//         ...userEmailKeys,
-//         security.userBaseProfile({ userId: targetUser._id }),
-//       ]),
-//     ],
-//   });
-
-//   await Promise.all(
-//     [targetUser.image, ...(targetUser.coverImages ?? [])]
-//       .filter((url) => Boolean(url))
-//       .map((url) => fileUpload.deleteLocalFile({ url })),
-//   );
-
-//   return;
-// };
-
 // UPLOAD IN CLOUDINARY
 export const profileImage = async (user, file) => {
   const { public_id, secure_url } = await cloud.uploadFile({
@@ -180,23 +98,52 @@ export const profileImage = async (user, file) => {
 
   const oldPublicId = user.image.public_id;
 
-  user.image = { public_id, secure_url };
-  await user.save({ validateModifiedOnly: true });
+  const newImage = { public_id, secure_url };
+
+  /*
+    ? using user.save()
+    user.image = newImage;
+    ! we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
+    await user.save({ validateModifiedOnly: true });
+    */
+
+  // ? using findByIdAndUpdate()
+  await queries.findByIdAndUpdate({
+    model: models.UserModel,
+    id: user._id,
+    update: {
+      image: newImage,
+    },
+  });
+
   await services.del({ key: security.userBaseProfile({ userId: user._id }) });
 
   if (oldPublicId) {
     await cloud.deleteFile({ publicId: oldPublicId });
   }
 
-  return user.image;
+  return newImage;
 };
 
 export const deleteProfileImage = async (user) => {
   const publicId = user.image.public_id;
 
-  // after: removes the field from the document (same as a user who never uploaded)
-  user.set("image", undefined);
-  await user.save({ validateModifiedOnly: true });
+  /*
+    ? using user.save()
+    ! after: removes the field from the document (same as a user who never uploaded)
+    user.set("image", undefined);
+    await user.save({ validateModifiedOnly: true });
+  */
+
+  // ? using findByIdAndUpdate()
+  await queries.findByIdAndUpdate({
+    model: models.UserModel,
+    id: user._id,
+    update: {
+      $unset: { image: 1 },
+    },
+  });
+
   await services.del({ key: security.userBaseProfile({ userId: user._id }) });
 
   if (publicId) {
@@ -214,15 +161,28 @@ export const coverImages = async (user, files) => {
 
   const oldPublicIds = user.coverImages.map((img) => img.public_id);
 
-  user.coverImages = newCoverImages;
-  await user.save({ validateModifiedOnly: true });
+  /*
+    ? using user.save()
+    user.coverImages = newCoverImages;
+    await user.save({ validateModifiedOnly: true });
+  */
+
+  // ? using findByIdAndUpdate()
+  await queries.findByIdAndUpdate({
+    model: models.UserModel,
+    id: user._id,
+    update: {
+      coverImages: newCoverImages,
+    },
+  });
+
   await services.del({ key: security.userBaseProfile({ userId: user._id }) });
 
   if (oldPublicIds.length) {
     await cloud.deleteFiles({ publicIds: oldPublicIds });
   }
 
-  return user.coverImages;
+  return newCoverImages;
 };
 
 export const deleteUser = async (admin, { userId }) => {

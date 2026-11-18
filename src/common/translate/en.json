@@ -157,7 +157,8 @@
     "twoStepVerificationAlreadyEnabled": "Two step verification is already enabled for this account",
     "twoStepVerificationNotEnabled": "Two step verification is not enabled for this account",
     "resetLinkStillValid": "A reset password link has already been sent, please check your email or try again later",
-    "invalidResetLink": "The reset password link is invalid or has expired"
+    "invalidResetLink": "The reset password link is invalid or has expired",
+    "concurrentUpdate": "This data was changed by another request, please try again"
   },
   "success": {
     "done": "Done",
@@ -190,7 +191,8 @@
     "profileImageUpdated": "Profile image updated successfully",
     "coverImagesUpdated": "Cover images updated successfully",
     "profileImageDeleted": "Profile image deleted successfully",
-    "resetLinkSent": "A reset password link has been sent to your email"
+    "resetLinkSent": "A reset password link has been sent to your email",
+    "otpSentIfRegistered": "If this email is registered, a verification code will be sent to it shortly"
   },
   "emailTemplate": {
     "confirmEmailTitle": "Email Confirmation",

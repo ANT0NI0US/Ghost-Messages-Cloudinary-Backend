@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import configService from "../../config/config.service.js";
 import { translate } from "../common/index.js";
 
@@ -46,8 +47,11 @@ export const globalErrorHandling = (error, req, res, next) => {
   } else if (error.type === "entity.parse.failed") {
     status = 400;
     message = "error.invalidJson";
+    // two requests changed the same document at the same time (optimisticConcurrency)
+  } else if (error instanceof mongoose.Error.VersionError) {
+    status = 409;
+    message = "error.concurrentUpdate";
   }
-
   const mood = configService.NODE_ENV == "production";
   const defaultErrorMessage = "error.server";
   const displayErrorMessage = message || defaultErrorMessage;

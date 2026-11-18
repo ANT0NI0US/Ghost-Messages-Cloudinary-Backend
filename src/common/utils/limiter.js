@@ -12,7 +12,7 @@ async function fromWhere(ip) {
     const response = await axios.get(`https://ipapi.co/${ip}/json`);
     return response.data;
   } catch (error) {
-    console.log(`fail to detect request origin`);
+    console.error(`fail to detect request origin`);
   }
 }
 */
@@ -22,7 +22,7 @@ async function fromWhere(ip) {
   try {
     return geoip.lookup(ip);
   } catch (error) {
-    console.log(`fail to detect request origin`);
+    console.error(`fail to detect request origin`);
   }
 }
 
@@ -54,7 +54,7 @@ export const generateRateLimiter = ({
     keyGenerator: function (req) {
       const ip = ipKeyGenerator(req.ip, 52);
       // this is stored in req.ratelimit.key
-      return `${req.ip}::${req.path}`;
+      return `${ip}::${req.path}`;
     },
     store: {
       async incr(key, cb) {

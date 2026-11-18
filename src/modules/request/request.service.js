@@ -82,8 +82,26 @@ export const takeAnActionToRequest = async (
     });
   }
 
+  /*
+  ? using request.save()
+
   request.status = action;
   await request.save();
+  */
+
+  // ? using findOneAndUpdate
+  // the status filter makes it atomic: if two actions arrive together only one finds it PENDING
+  const updatedRequest = await queries.findOneAndUpdate({
+    model: models.RequestModel,
+    filter: { _id: request._id, status: enums.RequestStatusEnum.PENDING },
+    update: { status: action },
+  });
+
+  if (!updatedRequest) {
+    throw exceptions.BadRequestException({
+      message: "error.requestAlreadyHandled",
+    });
+  }
 
   if (action === enums.ActionInRequestEnum.ACCEPTED) {
     const conversation = await queries.create({
@@ -102,7 +120,7 @@ export const takeAnActionToRequest = async (
     });
   }
 
-  return request;
+  return updatedRequest;
 };
 
 export const createRequest = async ({ messageId } = {}, user) => {

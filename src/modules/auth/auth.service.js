@@ -124,7 +124,9 @@ export const confirmEmail = async ({ email, otp }, issuer) => {
   });
 
   if (!account) {
-    throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    // * don't let the user know that the user is registered or not
+    // throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    throw exceptions.BadRequestException({ message: "error.invalidOtp" });
   }
 
   await sendEmail.checkOTP({
@@ -133,8 +135,21 @@ export const confirmEmail = async ({ email, otp }, issuer) => {
     subject: enums.EmailSubjectEnum.CONFIRM_EMAIL,
   });
 
-  account.confirmEmail = new Date();
-  await account.save();
+  /*
+    ? using account.save()
+
+    account.confirmEmail = new Date();
+    await account.save();
+  */
+
+  // ? using findByIdAndUpdate()
+  await queries.findByIdAndUpdate({
+    model: models.UserModel,
+    id: account._id,
+    update: {
+      confirmEmail: new Date(),
+    },
+  });
 
   await services.del({
     key: await services.keys({
@@ -165,8 +180,13 @@ export const reSendConfirmEmail = async ({ email }, lang) => {
     },
   });
 
+  // * don't let the user know that the user is registered or not
+  // if (!account) {
+  //   throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+  // }
+
   if (!account) {
-    throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    return;
   }
 
   await sendEmail.sendEmailOtp({
@@ -186,8 +206,13 @@ export const requestForgetPasswordCode = async ({ email }, lang) => {
     },
   });
 
+  // * don't let the user know that the user is registered or not
+  // if (!account) {
+  //   throw exceptions.NotFoundException({message:"error.invalidAccount"});
+  // }
+
   if (!account) {
-    throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    return;
   }
 
   await sendEmail.sendEmailOtp({
@@ -208,7 +233,9 @@ export const verifyForgotPasswordCode = async ({ email, otp }) => {
   });
 
   if (!account) {
-    throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    // * don't let the user know that the user is registered or not
+    // throw exceptions.NotFoundException({message:"error.invalidAccount"});
+    throw exceptions.BadRequestException({ message: "error.invalidOtp" });
   }
 
   await sendEmail.checkOTP({
@@ -406,13 +433,17 @@ export const loginConfirmation = async ({ email, otp }, issuer) => {
   });
 
   if (!account) {
-    throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    // * don't let the user know that the user is registered or not
+    // throw exceptions.NotFoundException({ message: "error.invalidAccount" });
+    throw exceptions.BadRequestException({ message: "error.invalidOtp" });
   }
 
   if (!account.twoStepVerification) {
-    throw exceptions.ConflictException({
-      message: "error.twoStepVerificationNotEnabled",
-    });
+    // * don't let the user know that the user is registered or not
+    // throw exceptions.ConflictException({
+    //   message: "error.twoStepVerificationNotEnabled",
+    // });
+    throw exceptions.BadRequestException({ message: "error.invalidOtp" });
   }
 
   await sendEmail.checkOTP({
@@ -472,9 +503,22 @@ export const confirmTwoStepVerification = async (user, { otp }) => {
     subject: enums.EmailSubjectEnum.TWO_STEP_VERIFICATION,
   });
 
-  user.twoStepVerification = true;
-  // we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
-  await user.save({ validateModifiedOnly: true });
+  /*
+    ? using user.save()
+
+    user.twoStepVerification = true;
+    ! we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
+    await user.save({ validateModifiedOnly: true });
+  */
+
+  // ? using findByIdAndUpdate()
+  await queries.findByIdAndUpdate({
+    model: models.UserModel,
+    id: user._id,
+    update: {
+      twoStepVerification: true,
+    },
+  });
 
   await services.del({
     key: [
@@ -523,9 +567,22 @@ export const logout = async (
 ) => {
   switch (action) {
     case enums.LogoutEnum.ALL:
-      user.changeCredentialsTime = new Date();
-      // we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
-      await user.save({ validateModifiedOnly: true });
+      /*
+        ? using user.save()
+
+        user.changeCredentialsTime = new Date();
+        ! we use validateModifiedOnly: true cause we remove password from back in all cases and we don't want to validate it.
+        await user.save({ validateModifiedOnly: true });
+      */
+
+      // ? using findByIdAndUpdate()
+      await queries.findByIdAndUpdate({
+        model: models.UserModel,
+        id: user._id,
+        update: {
+          changeCredentialsTime: new Date(),
+        },
+      });
 
       const userRevokeKeys = await services.keys({
         prefix: security.userBaseRevokeToken({ userId: payload.sub }),

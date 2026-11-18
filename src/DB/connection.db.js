@@ -8,19 +8,27 @@ export const BootstrapDB = async (app) => {
     await mongoose.connect(configService.DB_URI, {
       serverSelectionTimeoutMS: 5000,
     });
-    console.log("DB CONNECTED 💥");
-    await models.UserModel.syncIndexes();
-    await models.MessageModel.syncIndexes();
-    await models.ConversationModel.syncIndexes();
-    await models.RequestModel.syncIndexes();
+    console.info("DB CONNECTED 💥");
+
+    // syncIndexes compares the DB indexes with the schemas (creates the new ones + drops the removed ones)
+    // it's a development tool, so it doesn't run on every vercel cold start / pm2 restart
+    // in production mongoose autoIndex still creates any missing index from the schema
+    if (configService.NODE_ENV === "development") {
+      await models.UserModel.syncIndexes();
+      await models.MessageModel.syncIndexes();
+      await models.ConversationModel.syncIndexes();
+      await models.RequestModel.syncIndexes();
+    }
     await connectRedis();
-    // dh hna hft7 al comment dh lma akon 48al development 34an lma akon 48al 3la vercel dh m4 hy4t8l 34an hwa byb2a mstny function fa btar any a3ml export default app; fy al main.js .
-    // app.listen(configService.PORT, () => {
-    //   console.log(`we are running on port ${configService.PORT}`);
-    // });
+    // VERCEL is set automatically by vercel only, so: on my machine -> listen, on vercel -> don't listen
+    if (!process.env.VERCEL) {
+      app.listen(configService.PORT, () => {
+        console.info(`we are running on port ${configService.PORT}`);
+      });
+    }
   } catch (error) {
-    console.log("FAILED TO CONNECT DB ✖");
-    console.log(error);
+    console.error("FAILED TO CONNECT DB ✖");
+    console.error(error);
     process.exit(1);
   }
 };
